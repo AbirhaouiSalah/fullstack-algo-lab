@@ -1,6 +1,6 @@
 ﻿import { describe, it, expect } from "vitest";
 import { twoSum } from "./solution";
-import { benchmarkAlgorithm } from "../../../scripts/algorithms/benchmark";
+import { benchmarkAlgorithm } from "../../benchmark";
 
 describe("Two Sum — Solution Correctness Suite", () => {
   it("should solve standard array inputs", () => {
@@ -18,7 +18,10 @@ describe("Two Sum — Solution Correctness Suite", () => {
 
 describe("Two Sum — Performance & Scalability Benchmark", () => {
   it("should maintain O(N) execution time scaling bounds", () => {
-    const results = benchmarkAlgorithm(
+    const results = benchmarkAlgorithm<{
+      nums: number[];
+      target: number;
+    }>(
       (input) => twoSum(input.nums, input.target),
       (size) => {
         const nums = Array.from({ length: size }, (_, i) => i);

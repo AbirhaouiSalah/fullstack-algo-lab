@@ -2,11 +2,17 @@
   const seen = new Map<number, number>();
 
   for (let i = 0; i < nums.length; i++) {
-    const complement = target - nums[i];
-    if (seen.has(complement)) {
-      return [seen.get(complement)!, i];
+    const current = nums[i];
+    if (current === undefined) {
+      continue;
     }
-    seen.set(nums[i], i);
+
+    const complement = target - current;
+    const previousIndex = seen.get(complement);
+    if (previousIndex !== undefined) {
+      return [previousIndex, i];
+    }
+    seen.set(current, i);
   }
 
   throw new Error("No two sum solution exists");

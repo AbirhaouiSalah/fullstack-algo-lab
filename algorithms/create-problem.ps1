@@ -30,7 +30,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "../..")
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $categoryPath = Join-Path $repoRoot "algorithms/$Category"
 $problemPath = Join-Path $categoryPath $Name
 

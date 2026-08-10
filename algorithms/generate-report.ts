@@ -49,7 +49,7 @@ function generateMarkdownReport(): void {
 
   let md = `# Algorithm Laboratory Progress Report\n\n`;
   md += `**Overall Completion:** ${completed} / ${total} Problems Validated\n\n`;
-  md += `| Category | Problem | Solution (`.ts`) | Test Suite (`.test.ts`) | Complexity Doc (`.md`) | Status |\n`;
+  md += `| Category | Problem | Solution (\.ts) | Test Suite (\.test.ts) | Complexity Doc (\.md) | Status |\n`;
   md += `| :--- | :--- | :---: | :---: | :---: | :---: |\n`;
 
   for (const p of problems) {
