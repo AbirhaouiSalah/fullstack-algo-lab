@@ -1,6 +1,8 @@
 ﻿import { describe, expect, it } from "vitest";
 import { solve, solveNaive, solveRecursive, solveHashSet } from "./solution";
 
+// Test suite for the "Contains Duplicate" problem, covering multiple implementations and performance benchmarks.
+
 const implementations: Array<{ name: string; fn: (nums: number[]) => boolean }> = [
   { name: "solveNaive", fn: solveNaive },
   { name: "solveRecursive", fn: solveRecursive },
