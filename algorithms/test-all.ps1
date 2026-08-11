@@ -40,7 +40,8 @@ function Invoke-Vitest {
 
     $vitestArgs = @("run", "--config", "vitest.config.ts")
 
-    if ($testName -and $testName.Trim() -ne "") {
+    # On ne passe -t que si on n'a pas ciblé un fichier spécifique
+    if ($testName -and $testName.Trim() -ne "" -and (-not $testFile -or $testFile.Count -eq 0)) {
         $vitestArgs += @("-t", $testName)
     }
 
@@ -68,15 +69,18 @@ try {
         Write-Host "Recherche des fichiers de test correspondant au motif : $TestName" -ForegroundColor Cyan
         $algoPath = Join-Path $repoRoot "algorithms"
 
-        # Conversion du motif pour cibler les dossiers/fichiers (ex: "two-sum" ou "two sum")
-        $cleanPattern = $TestName.ToLower().Replace(" ", "-")
+        $patternSpace = $TestName.ToLower()
+        $patternDash = $TestName.ToLower().Replace(" ", "-")
 
-        # 1. Recherche par nom de fichier ou sous-dossier
+        # 1. Recherche par nom de fichier ou nom de sous-dossier (supporte espaces ET tirets)
         $matchesList = Get-ChildItem -Path $algoPath -Recurse -Filter "*.test.ts" -File -ErrorAction SilentlyContinue |
-            Where-Object { $_.FullName.ToLower().Contains($cleanPattern) -or $_.Name.ToLower().Contains($cleanPattern) } |
+            Where-Object { 
+                $pathLower = $_.FullName.ToLower()
+                $pathLower.Contains($patternSpace) -or $pathLower.Contains($patternDash)
+            } |
             Select-Object -ExpandProperty FullName
 
-        # 2. Repli : recherche textuelle si aucune correspondance de nom
+        # 2. Repli : recherche textuelle dans le contenu du fichier
         if (-not $matchesList -or $matchesList.Count -eq 0) {
             $matchesList = Get-ChildItem -Path $algoPath -Recurse -Filter "*.test.ts" -File -ErrorAction SilentlyContinue |
                 Select-String -Pattern $TestName -SimpleMatch -List -ErrorAction SilentlyContinue |
@@ -93,22 +97,15 @@ try {
 
     Invoke-Vitest -testFile $TestFile -testName $TestName
 
-    # Step 2: Mise à jour du rapport de progression
-    # Write-Host "`n[2/3] Mise à jour du rapport de progression (docs/algorithms/progress.md)..." -ForegroundColor Yellow
-    # Invoke-LocalCommand -CommandPath $tsNodeExe -Arguments @("scripts/algorithms/generate-report.ts")
-
     # Step 2: Mise à jour du rapport de progression (docs/algorithms/progress.md)
     Write-Host "`n[2/3] Mise à jour du rapport de progression (docs/algorithms/progress.md)..." -ForegroundColor Yellow
-    
     $reportScript = Join-Path $repoRoot "scripts\algorithms\generate-report.ts"
     $tsConfig = Join-Path $repoRoot "tsconfig.json"
-
     Invoke-LocalCommand -CommandPath $tsNodeExe -Arguments @("--project", $tsConfig, $reportScript)
 
-
-    # Step 3: Contrôle de type TypeScript
+    # Step 3: Contrôle de type TypeScript (tsc)
     Write-Host "`n[3/3] Contrôle de type TypeScript (tsc)..." -ForegroundColor Yellow
-    Invoke-LocalCommand -CommandPath $tscExe -Arguments @("--noEmit")
+    Invoke-LocalCommand -CommandPath $tscExe -Arguments @("--project", $tsConfig, "--noEmit")
 }
 finally {
     Pop-Location
