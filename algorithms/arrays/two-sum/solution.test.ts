@@ -2,6 +2,8 @@
 import { twoSum } from "./solution";
 import { benchmarkAlgorithm } from "../../benchmark";
 
+// Test suite for the "Two Sum" problem, covering correctness and performance benchmarks.
+
 describe("Two Sum — Solution Correctness Suite", () => {
   it("should return indices for a standard input", () => {
     expect(twoSum([2, 7, 11, 15], 9)).toEqual([0, 1]);
