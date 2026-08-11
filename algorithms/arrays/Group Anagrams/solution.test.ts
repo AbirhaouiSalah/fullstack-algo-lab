@@ -1,6 +1,8 @@
 ﻿import { describe, it, expect } from "vitest";
 import { groupAnagrams, groupAnagramsSort } from "./solution";
 
+// Test suite for the "Group Anagrams" problem, covering both optimal and alternative implementations.
+
 /** Helper: sort groups and strings inside groups for order-independent comparison */
 function normalize(groups: string[][]): string[][] {
   return groups
