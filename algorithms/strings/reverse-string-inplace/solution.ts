@@ -5,7 +5,7 @@ export function solve(chars: string[]): void {
   let right = chars.length - 1;
 
   while (left < right) {
-    [chars[left], chars[right]] = [chars[right], chars[left]];
+    [chars[left]!, chars[right]!] = [chars[right]!, chars[left]!];
     left++;
     right--;
   }

@@ -2,7 +2,7 @@
 
 function reverseRange(nums: number[], start: number, end: number): void {
   while (start < end) {
-    [nums[start], nums[end]] = [nums[end], nums[start]];
+    [nums[start]!, nums[end]!] = [nums[end]!, nums[start]!];
     start++;
     end--;
   }

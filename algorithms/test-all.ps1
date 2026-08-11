@@ -9,12 +9,11 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 # 2. Détection dynamique des binaires
 $nodeExe = "C:\Program Files\nodejs\node.exe"
 $vitestExe = Join-Path $repoRoot "node_modules\.bin\vitest.cmd"
-$tsNodeExe = Join-Path $repoRoot "node_modules\.bin\ts-node.cmd"
 $tscExe = Join-Path $repoRoot "node_modules\.bin\tsc.cmd"
 
 $env:PATH = "$env:PATH;C:\Program Files\nodejs"
 
-foreach ($exe in @($nodeExe, $vitestExe, $tsNodeExe, $tscExe)) {
+foreach ($exe in @($nodeExe, $vitestExe, $tscExe)) {
     if (-not (Test-Path $exe)) {
         throw "Exécutable introuvable : $exe. Vérifiez l'installation dans $repoRoot."
     }
@@ -72,7 +71,7 @@ try {
         $patternSpace = $TestName.ToLower()
         $patternDash = $TestName.ToLower().Replace(" ", "-")
 
-        # 1. Recherche par nom de fichier ou nom de sous-dossier (supporte espaces ET tirets)
+        # 1. Recherche par nom de fichier ou nom de sous-dossier
         $matchesList = Get-ChildItem -Path $algoPath -Recurse -Filter "*.test.ts" -File -ErrorAction SilentlyContinue |
             Where-Object { 
                 $pathLower = $_.FullName.ToLower()
@@ -99,13 +98,16 @@ try {
 
     # Step 2: Mise à jour du rapport de progression (docs/algorithms/progress.md)
     Write-Host "`n[2/3] Mise à jour du rapport de progression (docs/algorithms/progress.md)..." -ForegroundColor Yellow
-    $reportScript = Join-Path $repoRoot "scripts\algorithms\generate-report.ts"
-    $tsConfig = Join-Path $repoRoot "tsconfig.json"
-    Invoke-LocalCommand -CommandPath $tsNodeExe -Arguments @("--project", $tsConfig, $reportScript)
+    
+    # Chemin exact vers algorithms/generate-report.ts
+    $reportScriptPath = Join-Path $repoRoot "algorithms\generate-report.ts"
+    $tsRegisterPath = Join-Path $repoRoot "node_modules\ts-node\register"
+    
+    Invoke-LocalCommand -CommandPath $nodeExe -Arguments @("-r", $tsRegisterPath, $reportScriptPath)
 
     # Step 3: Contrôle de type TypeScript (tsc)
     Write-Host "`n[3/3] Contrôle de type TypeScript (tsc)..." -ForegroundColor Yellow
-    Invoke-LocalCommand -CommandPath $tscExe -Arguments @("--project", $tsConfig, "--noEmit")
+    Invoke-LocalCommand -CommandPath $tscExe -Arguments @("--project", "tsconfig.json", "--noEmit")
 }
 finally {
     Pop-Location
