@@ -30,7 +30,7 @@ describe("groupAnagrams – frequency key (optimal)", () => {
     const input = ["eat", "tea", "ate", "eta"];
     const result = groupAnagrams(input);
     expect(result).toHaveLength(1);
-    expect(result[0].sort()).toEqual(["ate", "eat", "eta", "tea"]);
+    expect(result[0]!.sort()).toEqual(["ate", "eat", "eta", "tea"]);
   });
 
   it("no anagrams – every string alone", () => {
