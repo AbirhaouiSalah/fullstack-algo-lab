@@ -11,7 +11,7 @@ export function twoSum(nums: number[], target: number): [number, number] {
   const numMap = new Map<number, number>();
 
   for (let i = 0; i < nums.length; i++) {
-    const currentNum: number = nums[i];
+    const currentNum = nums[i]!; // Assertion non-null
     const complement = target - currentNum;
     if (numMap.has(complement)) {
       return [numMap.get(complement)!, i];
