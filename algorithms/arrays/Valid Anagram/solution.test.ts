@@ -7,6 +7,8 @@ import {
   type AnagramFn,
 } from "./solution";
 
+// Test suite for the "Valid Anagram" problem, covering multiple implementations and performance benchmarks.
+
 /* ================================================================== */
 /*  Correctness tests – every algorithm must produce the same result  */
 /* ================================================================== */
