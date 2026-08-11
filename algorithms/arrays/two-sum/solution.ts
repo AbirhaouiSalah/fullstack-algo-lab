@@ -11,19 +11,20 @@ export function twoSum(nums: number[], target: number): [number, number] {
   const numMap = new Map<number, number>();
 
   for (let i = 0; i < nums.length; i++) {
-    const complement = target - nums[i];
+    const currentNum: number = nums[i];
+    const complement = target - currentNum;
     if (numMap.has(complement)) {
       return [numMap.get(complement)!, i];
     }
-    numMap.set(nums[i], i);
+    numMap.set(currentNum, i);
   }
 
   throw new Error("No two sum solution exists");
 }
 
 /**
- * benchmarkInput is consumed by scripts/algorithms/benchmark.ts to invoke
- * the exported solution function repeatedly with a representative payload.
+ * benchmarkInput is consumed by scripts/algorithms/benchmark.ts.
+ * Explicitly typed to ensure compatibility with TypeScript strict mode.
  */
 export const benchmarkInput: Array<{ nums: number[]; target: number }> = [
   { nums: [2, 7, 11, 15], target: 9 },
