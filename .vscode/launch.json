@@ -1,0 +1,9 @@
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Debug fichier TS courant",
+  "runtimeArgs": ["--import", "tsx"],
+  "args": ["${file}"],
+  "skipFiles": ["<node_internals>/**"],
+  "console": "internalConsole"
+}
