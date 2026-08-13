@@ -133,7 +133,7 @@ export function topKFrequentBucket(nums: number[], k: number): number[] {
   for (const n of nums) {
     freq.set(n, (freq.get(n) ?? 0) + 1);
   }
-
+  
   // buckets[i] = liste des valeurs qui apparaissent exactement i fois
   const buckets: number[][] = Array.from({ length: nums.length + 1 }, () => []);
   for (const [value, count] of freq) {
