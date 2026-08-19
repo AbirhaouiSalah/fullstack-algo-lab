@@ -18,6 +18,11 @@ describe("caesar-cipher", () => {
     expect(solve("abc", 29)).toBe("def");
   });
 
+  it("handles a shift of upper bound", () => {
+    expect(solve("ABC", 29)).toBe("DEF");
+  });
+
+
   it("handles a negative shift", () => {
     expect(solve("abc", -1)).toBe("zab");
   });

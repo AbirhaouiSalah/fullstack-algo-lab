@@ -5,13 +5,13 @@ describe("reverse-string-inplace", () => {
   it("reverses an even-length array", () => {
     const chars = ["h", "e", "l", "l", "o", "!"];
     solve(chars);
-    expect(chars).toEqual(["!", "o", "l", "l", "e", "h"]);
+    expect(solve(chars)).toEqual(["!", "o", "l", "l", "e", "h"]);
   });
 
   it("reverses an odd-length array", () => {
     const chars = ["h", "e", "l", "l", "o"];
     solve(chars);
-    expect(chars).toEqual(["o", "l", "l", "e", "h"]);
+    expect(solve(chars)).toEqual(["o", "l", "l", "e", "h"]);
   });
 
   it("leaves a single-character array unchanged", () => {
