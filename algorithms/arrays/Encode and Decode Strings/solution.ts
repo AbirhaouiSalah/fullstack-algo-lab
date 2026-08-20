@@ -1,251 +1,168 @@
 ﻿/**
- * Encode and Decode Strings
- * 
- * Design an algorithm to encode a list of strings to a single string.
- * The encoded string is then decoded back to the original list of strings.
- * 
- * Approach: Length-prefix encoding with delimiter
- * Format: [length]#[string][length]#[string]...
- * Example: ["Hello", "World"] -> "5#Hello5#World"
+ * debug.ts
+ * ---------------------------------------------------------------------------
+ * Trace pas à pas de tes deux implémentations de decode() SANS RIEN CORRIGER.
+ * Le but est d'observer exactement où les valeurs divergent de ce qui est
+ * attendu, avec un garde-fou anti-boucle-infinie pour rester exécutable.
+ *
+ * Usage : tsx debug.ts
+ * ---------------------------------------------------------------------------
  */
 
-/**
- * Solution class with encode and decode methods
- */
-export class Codec {
-    /**
-     * Encodes a list of strings to a single string.
-     * 
-     * Approach 1: Length-prefix with '#' delimiter (Recommended)
-     * Time: O(m) where m is sum of lengths of all strings
-     * Space: O(m + n) for the encoded string
-     * 
-     * @param strs - List of strings to encode
-     * @returns Encoded string
-     */
-    encode(strs: string[]): string {
-        let encoded = '';
-        
-        for (const str of strs) {
-            // Prepend length and '#' delimiter before each string
-            encoded += str.length + '#' + str;
-        }
-        
-        return encoded;
-    }
+const MAX_ITERATIONS = 20; // garde-fou : au-delà, on considère que c'est une boucle infinie
 
-    /**
-     * Decodes a single string back to a list of strings.
-     * 
-     * Time: O(m) where m is sum of lengths of all strings
-     * Space: O(m + n) for the decoded list
-     * 
-     * @param s - Encoded string
-     * @returns Decoded list of strings
-     */
-    decode(s: string): string[] {
-        const result: string[] = [];
-        let i = 0;
-        
-        while (i < s.length) {
-            // Find the position of the next '#'
-            let j = i;
-            while (j < s.length && s[j] !== '#') {
-                j++;
-            }
-            
-            // Parse the length (number before '#')
-            const length = parseInt(s.substring(i, j));
-            
-            // Skip the '#'
-            j++;
-            
-            // Extract the string of the specified length
-            const str = s.substring(j, j + length);
-            result.push(str);
-            
-            // Move to the next string
-            i = j + length;
-        }
-        
-        return result;
-    }
-
-    /**
-     * Approach 2: Using non-ASCII delimiter (Simpler but less robust)
-     * Uses a Unicode character that won't appear in input
-     * 
-     * Time: O(m) | Space: O(m + n)
-     */
-    encodeWithDelimiter(strs: string[]): string {
-        // Using Unicode character that's unlikely to appear in input
-        const delimiter = String.fromCharCode(257); // 'ā'
-        return strs.join(delimiter);
-    }
-
-    decodeWithDelimiter(s: string): string[] {
-        const delimiter = String.fromCharCode(257); // 'ā'
-        return s.split(delimiter);
-    }
-
-    /**
-     * Approach 3: Chunk-based encoding with 4-byte length prefix
-     * More robust for binary data
-     * 
-     * Time: O(m) | Space: O(m + n)
-     */
-    encodeChunked(strs: string[]): string {
-        const result: string[] = [];
-        
-        for (const str of strs) {
-            // Convert length to 4-byte hexadecimal
-            const lengthHex = str.length.toString(16).padStart(8, '0');
-            result.push(lengthHex + str);
-        }
-        
-        return result.join('');
-    }
-
-    decodeChunked(s: string): string[] {
-        const result: string[] = [];
-        let i = 0;
-        
-        while (i < s.length) {
-            // Read 8 characters for the length
-            const lengthHex = s.substring(i, i + 8);
-            const length = parseInt(lengthHex, 16);
-            i += 8;
-            
-            // Extract the string of the specified length
-            const str = s.substring(i, i + length);
-            result.push(str);
-            i += length;
-        }
-        
-        return result;
-    }
-
-    /**
-     * Approach 4: JSON-based encoding (Simple but with overhead)
-     * 
-     * Time: O(m) | Space: O(m + n)
-     */
-    encodeJSON(strs: string[]): string {
-        return JSON.stringify(strs);
-    }
-
-    decodeJSON(s: string): string[] {
-        return JSON.parse(s);
-    }
-
-    /**
-     * Approach 5: Length-prefix with escaping (Handles any characters)
-     * Uses ':' as delimiter and '\\' as escape character
-     * 
-     * Time: O(m) | Space: O(m + n)
-     */
-    encodeEscaped(strs: string[]): string {
-        const escaped = strs.map(str => {
-            // Escape ':' and '\\' characters
-            return str.replace(/\\/g, '\\\\').replace(/:/g, '\\:');
-        });
-        return escaped.join(':');
-    }
-
-    decodeEscaped(s: string): string[] {
-        const result: string[] = [];
-        let current = '';
-        let i = 0;
-        
-        while (i < s.length) {
-            if (s[i] === '\\') {
-                // Skip escape character and take the next character as is
-                current += s[i + 1];
-                i += 2;
-            } else if (s[i] === ':') {
-                // Delimiter found
-                result.push(current);
-                current = '';
-                i++;
-            } else {
-                current += s[i];
-                i++;
-            }
-        }
-        
-        // Add the last string
-        result.push(current);
-        return result;
-    }
-
-    /**
-     * Approach 6: Base64 encoding for binary-safe transmission
-     * 
-     * Time: O(m) | Space: O(m + n)
-     */
-    encodeBase64(strs: string[]): string {
-        // First encode using length-prefix, then base64
-        const encoded = this.encode(strs);
-        return btoa(encoded);
-    }
-
-    decodeBase64(s: string): string[] {
-        const decoded = atob(s);
-        return this.decode(decoded);
-    }
+function separator(title: string): void {
+    console.log('\n' + '='.repeat(70));
+    console.log(title);
+    console.log('='.repeat(70));
 }
 
-/**
- * Alternative: Using a class with static methods
- */
-export class CodecStatic {
-    static encode(strs: string[]): string {
-        return strs.map(str => `${str.length}#${str}`).join('');
-    }
+// --- encode() : reprise telle quelle, elle ne semble pas buguée -------------
 
-    static decode(s: string): string[] {
-        const result: string[] = [];
-        let i = 0;
-        
-        while (i < s.length) {
-            let j = i;
-            while (j < s.length && s[j] !== '#') j++;
-            const length = parseInt(s.substring(i, j));
-            j++;
-            result.push(s.substring(j, j + length));
-            i = j + length;
+function encode(strs: string[]): string {
+    let encodedString: string = "";
+    for (const s of strs) {
+        if (s.includes(':')) {
+            throw new Error("Input strings cannot contain the delimiter ':'");
+        } else if (s.includes('#')) {
+            throw new Error("Input strings cannot contain the delimiter '#'");
+        } else if (s.length > 1000) {
+            throw new Error("Input strings cannot exceed 1000 characters in length");
+        } else if (s.length === 0) {
+            throw new Error("Input strings cannot be empty");
+        } else if (s.length < 1) {
+            throw new Error("Input strings must have at least 1 character");
+        } else {
+            encodedString += `${s.length}:${s}`;
         }
-        
-        return result;
     }
+    return encodedString;
 }
 
-/**
- * Factory function for creating codec instances
- */
-export function createCodec(): Codec {
-    return new Codec();
-}
+// --- Version 1 : Codec.decode() instrumentée (logique inchangée) -----------
 
-/**
- * Functional approach
- */
-export const encode = (strs: string[]): string => {
-    return strs.map(str => `${str.length}#${str}`).join('');
-};
+function debugCodecDecode(s: string): string[] {
+    separator(`Codec.decode("${s}")`);
 
-export const decode = (s: string): string[] => {
-    const result: string[] = [];
+    let decodedStrings: string[] = [];
+    let current_index = 0;
+    let current_lentgh = 0;
+    let last_index = 0;
+
+    const firstColon = s.indexOf(":", 0);
+    current_index = s.indexOf(":", 0);
+    current_lentgh = parseInt(s.substring(0, firstColon));
+    console.log(
+        `[init] firstColon=${firstColon}, ` +
+        `current_lentgh = parseInt("${s.substring(0, firstColon)}") = ${current_lentgh}`
+    );
+
     let i = 0;
-    
+    let iteration = 0;
+
     while (i < s.length) {
-        let j = i;
-        while (j < s.length && s[j] !== '#') j++;
-        const length = parseInt(s.substring(i, j));
-        j++;
-        result.push(s.substring(j, j + length));
-        i = j + length;
+        iteration++;
+        console.log(`\n--- itération ${iteration} ---`);
+        console.log(`  ENTRÉE : i=${i}, current_index=${current_index}, current_lentgh=${current_lentgh}, last_index=${last_index}`);
+
+        if (iteration > MAX_ITERATIONS) {
+            console.log(`  ⚠️  MAX_ITERATIONS (${MAX_ITERATIONS}) dépassé — boucle infinie détectée, arrêt forcé.`);
+            console.log(`  i vaut ${i} et ne progresse plus vers s.length (${s.length}).`);
+            break;
+        }
+
+        last_index = current_index + current_lentgh ;    
+        console.log(`  last_index = current_index(${current_index}) + current_lentgh(${current_lentgh}) = ${last_index}`);
+
+        const srt = s.substring(current_index + 1, last_index + 1);
+        console.log(`  srt = s.substring(${current_index + 1}, ${last_index}) = "${srt}"`);
+
+        current_index = s.indexOf(":", last_index);
+        console.log(`  current_index = s.indexOf(":", ${last_index}) = ${current_index}`);
+
+        let lengthSlice = s.substring(last_index + 1, current_index);
+        current_lentgh = parseInt(lengthSlice);
+        console.log(`  current_lentgh = parseInt(s.substring(${last_index + 1}, ${current_index})="${lengthSlice}") = ${current_lentgh}`);
+
+        decodedStrings.push(srt);
+        console.log(`  push("${srt}") → decodedStrings = ${JSON.stringify(decodedStrings)}`);
+
+        const newI = last_index + 1;
+        console.log(`  i = last_index(${last_index}) + current_index(${current_index}) = ${newI}`);
+        i = newI;
+
+        if (Number.isNaN(current_index) || Number.isNaN(current_lentgh) || Number.isNaN(i)) {
+            console.log(`  ⚠️  NaN détecté dans une variable de contrôle — la boucle va se comporter de façon imprévisible.`);
+        }
     }
-    
-    return result;
-};
+
+    console.log(`\nRÉSULTAT FINAL : ${JSON.stringify(decodedStrings)}`);
+    return decodedStrings;
+}
+
+// --- Version 2 : decode() standalone instrumentée (logique inchangée) ------
+
+function debugStandaloneDecode(s: string): string[] {
+    separator(`decode("${s}") — version split(':')`);
+
+    let decodedStrings: string[] = [];
+    let i = 0;
+
+    const parts = s.split(':');
+    console.log(`s.split(':') = ${JSON.stringify(parts)}`);
+    console.log(`(nombre de fragments : ${parts.length})`);
+
+    let iteration = 0;
+    for (const str of parts) {
+        iteration++;
+        console.log(`\n--- fragment ${iteration}: "${str}" ---`);
+
+        if (str.length === 0) {
+            console.log(`  ⚠️  throw: "Decoded string cannot be empty" (fragment vide)`);
+            throw new Error("Decoded string cannot be empty");
+        }
+
+        if (str.includes(':')) {
+            console.log(`  contient ':' → continue (mais split() a déjà retiré tous les ':', ce cas n'arrive jamais)`);
+            continue;
+        } else {
+            decodedStrings[i] = str;
+            console.log(`  decodedStrings[${i}] = "${str}" → ${JSON.stringify(decodedStrings)}`);
+            i++;
+        }
+    }
+
+    console.log(`\nRÉSULTAT FINAL : ${JSON.stringify(decodedStrings)}`);
+    return decodedStrings;
+}
+
+// --- Exécution -----------------------------------------------------------------
+
+function main(): void {
+    const input = ['Hello', 'World', "World"];
+    console.log(`INPUT : ${JSON.stringify(input)}`);
+
+    const encoded = encode(input);
+    console.log(`encode(input) = "${encoded}"`);
+
+    let resultCodec: string[] = [];
+    try {
+        resultCodec = debugCodecDecode(encoded);
+    } catch (err) {
+        console.log(`\n❌ Codec.decode a levé une exception : ${(err as Error).message}`);
+    }
+
+    // let resultStandalone: string[] = [];
+    // try {
+    //     resultStandalone = debugStandaloneDecode(encoded);
+    // } catch (err) {
+    //     console.log(`\n❌ decode standalone a levé une exception : ${(err as Error).message}`);
+    // }
+
+    separator('COMPARAISON AVEC L\'ATTENDU');
+    console.log(`Attendu           : ${JSON.stringify(input)}`);
+    console.log(`Codec.decode      : ${JSON.stringify(resultCodec)}  ${JSON.stringify(resultCodec) === JSON.stringify(input) ? '✓' : '✗'}`);
+    console.log(`decode standalone : ${JSON.stringify(resultStandalone)}  ${JSON.stringify(resultStandalone) === JSON.stringify(input) ? '✓' : '✗'}`);
+}
+
+main();
