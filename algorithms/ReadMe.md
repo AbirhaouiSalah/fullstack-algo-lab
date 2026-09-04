@@ -1,7 +1,5 @@
 # Executing Algorithm Tests
 
-TOTO CHECK GIT FUNCTIONNAL 
-
 This guide explains how to run the algorithm test pipelines locally. 
 
 ## Python tests with pytest
