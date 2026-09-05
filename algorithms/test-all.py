@@ -89,6 +89,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Print a summary of the Python exercise files after the tests.",
     )
+    parser.add_argument(
+        "--benchmark-all",
+        action="store_true",
+        help="Run every benchmark exposed by a Python test file after the tests.",
+    )
     return parser.parse_args()
 
 
@@ -110,6 +115,31 @@ def print_summary() -> None:
             f"{'oui' if has_complexity else 'non':^11}"
         )
     print(f"\nExercices avec test et analyse de complexite: {completed}/{len(problems)}")
+
+
+def run_all_benchmarks() -> None:
+    benchmark_count = 0
+    for problem in discover_problems():
+        test_file = problem / "test_solution.py"
+        if not test_file.exists():
+            continue
+
+        relative_test_file = str(test_file.relative_to(REPOSITORY_ROOT))
+        module_name = f"benchmark_{problem.name.replace(' ', '_')}"
+        spec = importlib.util.spec_from_file_location(module_name, test_file)
+        if spec is None or spec.loader is None:
+            continue
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        benchmark = getattr(module, "run_benchmark", None)
+        if benchmark is None:
+            continue
+
+        benchmark_count += 1
+        print(f"\nBenchmark: {relative_test_file}")
+        benchmark()
+
+    print(f"\nBenchmarks executes: {benchmark_count}")
 
 
 def run_benchmark(test_path: str) -> None:
@@ -162,6 +192,9 @@ def main() -> int:
 
     if completed.returncode == 0 and args.summary:
         print_summary()
+
+    if completed.returncode == 0 and args.benchmark_all:
+        run_all_benchmarks()
 
     if completed.returncode == 0 and args.benchmark:
         benchmark_path = test_paths[0] if selected_problem else args.test_file[0]

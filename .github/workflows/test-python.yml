@@ -37,15 +37,18 @@ jobs:
         run: |
           set -o pipefail
           set +e
-          python algorithms/test-all.py --summary --benchmark-all 2>&1 | tee python-results.txt
+          python algorithms/test-all.py --summary 2>&1 | tee python-results.txt
           test_status=${PIPESTATUS[0]}
+          python algorithms/test-all.py \
+            --test-file "algorithms/arrays/Top K Frequent Elements/test_solution.py" \
+            --benchmark 2>&1 | tee -a python-results.txt
+          benchmark_status=${PIPESTATUS[0]}
+          python algorithms/test-all.py \
+            --test-file "algorithms/arrays/two-sum/test_solution.py" \
+            --benchmark 2>&1 | tee -a python-results.txt
+          second_benchmark_status=${PIPESTATUS[0]}
           set -e
           cat python-results.txt >> "$GITHUB_STEP_SUMMARY"
-          exit "$test_status"
-
-      - name: Upload Python results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-test-and-benchmark-results
-          path: python-results.txt
+          if [[ "$test_status" -ne 0 || "$benchmark_status" -ne 0 || "$second_benchmark_status" -ne 0 ]]; then
+            exit 1
+          fi
