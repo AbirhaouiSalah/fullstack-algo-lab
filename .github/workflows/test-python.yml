@@ -33,4 +33,19 @@ jobs:
         run: python -m pip install -r algorithms/requirements-dev.txt
 
       - name: Run pytest
-        run: python algorithms/test-all.py --summary
+        shell: bash
+        run: |
+          set -o pipefail
+          set +e
+          python algorithms/test-all.py --summary --benchmark-all 2>&1 | tee python-results.txt
+          test_status=${PIPESTATUS[0]}
+          set -e
+          cat python-results.txt >> "$GITHUB_STEP_SUMMARY"
+          exit "$test_status"
+
+      - name: Upload Python results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-test-and-benchmark-results
+          path: python-results.txt
