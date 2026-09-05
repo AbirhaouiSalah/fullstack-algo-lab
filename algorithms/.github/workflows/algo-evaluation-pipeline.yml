@@ -1,0 +1,42 @@
+﻿name: Algorithm Laboratory Evaluation Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'algorithms/**'
+      - 'scripts/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'algorithms/**'
+
+jobs:
+  evaluate-algorithms:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime (v20)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Project Dependencies
+        run: npm ci
+
+      - name: Type Check TypeScript Codebase
+        run: npx tsc --noEmit
+
+      - name: Run Vitest Unit, Edge Case & Performance Tests
+        run: npx vitest run algorithms/ --coverage
+
+      - name: Regenerate Progress Report
+        run: npx ts-node scripts/algorithms/generate-report.ts
+
+      - name: Verify Git Status Cleanliness
+        run: |
+          git diff --exit-code || (echo "Progress report out of sync. Run scripts/algorithms/generate-report.ts locally." && exit 1)
