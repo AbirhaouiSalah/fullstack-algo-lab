@@ -1,0 +1,36 @@
+name: Test Algorithms
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "algorithms/**/*.py"
+      - "algorithms/requirements-dev.txt"
+      - "pyproject.toml"
+      - ".github/workflows/test-algorithms.yml"
+  push:
+    branches: [main]
+    paths:
+      - "algorithms/**/*.py"
+      - "algorithms/requirements-dev.txt"
+      - "pyproject.toml"
+      - ".github/workflows/test-algorithms.yml"
+
+jobs:
+  python:
+    name: Pytest algorithms
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: algorithms/requirements-dev.txt
+
+      - name: Install Python tooling
+        run: python -m pip install -r algorithms/requirements-dev.txt
+
+      - name: Run tests and benchmarks
+        run: python algorithms/test-all.py --summary --benchmark-all

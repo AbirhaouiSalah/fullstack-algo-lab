@@ -13,8 +13,8 @@ solution_spec.loader.exec_module(solution_module)
 
 implementations = [
     solution_module.solve_hint_1,
-#    solution_module.solve_hint_2,
-#    solution_module.solve_hint_3,
+    solution_module.solve_hint_2,
+    solution_module.solve_hint_3,
 ]
 
 

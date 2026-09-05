@@ -67,9 +67,25 @@ def solve_hint_2(strs: list[str]) -> list[list[str]]:
 
 
 def solve_hint_3(strs: list[str]) -> list[list[str]]:
-    groups = {}
 
-    return list(groups.values())
+    groups = defaultdict(list)        # string -> ascii-sum signature
+    groups_list = defaultdict(list)   # ascii-sum signature -> list of strings
+
+    # STEP 1: signature = sum of ASCII codes, then the unique signatures
+    for s in strs:
+        codes = [ord(c) for c in s]
+        groups[s] = sum(codes)
+    unique = sorted(set(groups.values()))
+
+    # STEP 2: group strings sharing a signature (loop over strs, not groups,
+    # so repeated input strings aren't lost)
+    for ascii_number in unique:
+        for s in strs:
+            if groups[s] == ascii_number:
+                groups_list[ascii_number].append(s)
+
+    # STEP 3
+    return list(groups_list.values())
 
 def main():
     # expected = [["hat"], ["act", "cat"], ["pots", "stop", "tops"]]
@@ -79,7 +95,7 @@ def main():
     # result=solve_hint_1(["x"]) == [["x"]]
     # print(result)
 
-#     # result = solve_hint_1([""]) == [[""]]
+    # result = solve_hint_1([""]) == [[""]]
     # print(result)
 
     result = solve_hint_1(["", "", "a", "a", "aa", "a", "baa", "aba"])

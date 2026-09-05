@@ -25,6 +25,14 @@ python algorithms/test-all.py \
   --test-file "algorithms/arrays/Top K Frequent Elements/test_solution.py"
 ```
 
+### example:
+
+```bash
+python algorithms/test-all.py --problem 4 --benchmark
+python algorithms/test-all.py --list-problems 
+```
+
+
 ### Filter tests by name
 
 ```bash
