@@ -84,7 +84,32 @@ def parse_args() -> argparse.Namespace:
         "--problem",
         help="Select a problem by its number from --list-problems or by name.",
     )
+    parser.add_argument(
+        "--summary",
+        action="store_true",
+        help="Print a summary of the Python exercise files after the tests.",
+    )
     return parser.parse_args()
+
+
+def print_summary() -> None:
+    problems = discover_problems()
+    completed = 0
+    print("\nResume des exercices Python")
+    print(f"{'Exercice':<55} | {'solution.py':^11} | {'test':^6} | {'complexite':^11}")
+    print("-" * 94)
+    for problem in problems:
+        has_test = (problem / "test_solution.py").exists()
+        has_complexity = (problem / "complexity.md").exists()
+        if has_test and has_complexity:
+            completed += 1
+        relative = str(problem.relative_to(ALGORITHMS_ROOT))
+        print(
+            f"{relative:<55} | {'oui':^11} | "
+            f"{'oui' if has_test else 'non':^6} | "
+            f"{'oui' if has_complexity else 'non':^11}"
+        )
+    print(f"\nExercices avec test et analyse de complexite: {completed}/{len(problems)}")
 
 
 def run_benchmark(test_path: str) -> None:
@@ -134,6 +159,9 @@ def main() -> int:
 
     print(f"Running: {shlex.join(command)}")
     completed = subprocess.run(command, cwd=REPOSITORY_ROOT, check=False)
+
+    if completed.returncode == 0 and args.summary:
+        print_summary()
 
     if completed.returncode == 0 and args.benchmark:
         benchmark_path = test_paths[0] if selected_problem else args.test_file[0]
