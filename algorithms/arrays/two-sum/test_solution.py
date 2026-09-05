@@ -13,7 +13,7 @@ solution_spec.loader.exec_module(solution_module)
 
 two_sum = solution_module.two_sum
 two_sum_brute_force = solution_module.two_sum_brute_force
-
+two_sum_fixed_index = solution_module.two_sum_hash_map
 
 def test_example_1():
     assert two_sum([3, 4, 5, 6], 7) == [0, 1]
@@ -34,6 +34,13 @@ def test_negative_values():
 def test_returns_indices_in_ascending_order():
     assert two_sum([10, 2, 7, 3], 5) == [1, 3]
 
+# generate hash map test :
+def test_hash_map():
+    assert two_sum_fixed_index([3, 4, 5, 6], 7) == [0, 1]
+    assert two_sum_fixed_index([4, 5, 6], 10) == [0, 2]
+    assert sorted(two_sum_fixed_index([5, 5], 10)) == [0, 1]
+    assert two_sum_fixed_index([-3, 4, 8, -1], 5) == [0, 2]
+    assert two_sum_fixed_index([10, 2, 7, 3], 5) == [1, 3]
 
 def test_generated_cases_match_brute_force():
     generator = random.Random(42)
@@ -54,6 +61,7 @@ def run_benchmark():
     implementations = [
         ("Hash map", two_sum, "O(n)"),
         ("Brute force", two_sum_brute_force, "O(n²)"),
+        ("Hash map (fixed index)", two_sum_fixed_index, "O(n)"),
     ]
     results = {name: [] for name, _, _ in implementations}
     random_generator = random.Random(42)

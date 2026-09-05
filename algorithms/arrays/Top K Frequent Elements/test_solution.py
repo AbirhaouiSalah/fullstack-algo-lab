@@ -80,7 +80,7 @@ def run_benchmark():
             elapsed_ms = (time.perf_counter() - start) * 1_000 / repetitions
             results[name].append(elapsed_ms)
 
-    print("\nComparaison des performances")
+    print("\nComparaison des performances: Top K Frequent Elements")
     header = " | ".join([f"{'Input n':>10}"] + [f"{name:>14}" for name, _, _ in implementations])
     print(header)
     print("-" * len(header))
