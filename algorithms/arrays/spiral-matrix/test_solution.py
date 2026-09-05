@@ -4,7 +4,6 @@ import random
 import time
 from pathlib import Path
 
-
 solution_path = Path(__file__).with_name("solution.py")
 spec = importlib.util.spec_from_file_location("generated_solution", solution_path)
 if spec is None or spec.loader is None:
@@ -60,7 +59,7 @@ def run_benchmark():
                 for _ in range(repetitions):
                     function(*arguments)
                 elapsed_ms = (time.perf_counter() - start) * 1_000 / repetitions
-            except Exception as error:
+            except (AttributeError, IndexError, TypeError, ValueError, RecursionError) as error:
                 print(f"{function.__name__:>24} | {size:>8,} | ignoree: {error}")
                 break
             print(f"{function.__name__:>24} | {size:>8,} | {elapsed_ms:>18.4f}")
