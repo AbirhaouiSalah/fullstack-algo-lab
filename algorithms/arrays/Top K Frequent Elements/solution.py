@@ -1,5 +1,4 @@
-﻿
-import heapq
+﻿import heapq
 
 
 def solve_hint_1(args0, args1):
@@ -12,6 +11,7 @@ def solve_hint_1(args0, args1):
         frequencies[num] = frequencies.get(num, 0) + 1
 
     return sorted(frequencies, key=frequencies.get, reverse=True)[:k]
+
 
 def solve_hint_2(args0, args1):
     nums, k = args0, args1
@@ -28,6 +28,7 @@ def solve_hint_2(args0, args1):
             k, ((frequency, num) for num, frequency in frequencies.items())
         )
     ]
+
 
 def solve_hint_3(args0, args1):
     nums, k = args0, args1
@@ -50,30 +51,28 @@ def solve_hint_3(args0, args1):
             return result[:k]
     return result
 
+
 def solve(args0, args1, args2):
-    # generate a case statet and define serveral solver for each case
     case = args2
-    try :
-        if case == 0:
-            return solve_hint_1(args0, args1)
-        if case == 1:
-            return solve_hint_2(args0, args1)
-        if case == 2:
-            return solve_hint_3(args0, args1)
-    except:
-        return print("Error: invalid case number")
+    if case == 0:
+        return solve_hint_1(args0, args1)
+    if case == 1:
+        return solve_hint_2(args0, args1)
+    if case == 2:
+        return solve_hint_3(args0, args1)
+    raise ValueError(f"Invalid case number: {case}")
+
 
 def main():
     print("lancer le code pour le problème Top K Frequent Elements")
     # Analyse de complexité : O(n log n) pour le tri du dictionnaire par fréquence décroissante
-    print("Analyse de complexité : O(n log n) pour le tri du dictionnaire par fréquence décroissante")
+    print(
+        "Analyse de complexité : O(n log n) pour le tri du dictionnaire par fréquence décroissante"
+    )
 
     print("Test case : Hint 1")
-    try:
-        print(solve([1,1,1,2,2,3], 2, 0))
-        print(solve([1], 1, 0))
-    except Exception as e:
-        print(f"Error: {e}")
+    print(solve([1, 1, 1, 2, 2, 3], 2, 0))
+    print(solve([1], 1, 0))
 
 
 if __name__ == "__main__":

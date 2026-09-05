@@ -1,8 +1,7 @@
+import importlib.util
 import random
 import time
 from pathlib import Path
-import importlib.util
-
 
 solution_path = Path(__file__).with_name("solution.py")
 solution_spec = importlib.util.spec_from_file_location("two_sum_solution", solution_path)
@@ -73,15 +72,11 @@ def run_benchmark():
             results[name].append(elapsed_ms)
 
     print("\nComparaison des performances: Two Sum")
-    header = " | ".join(
-        [f"{'Input n':>10}"] + [f"{name:>14}" for name, _, _ in implementations]
-    )
+    header = " | ".join([f"{'Input n':>10}"] + [f"{name:>14}" for name, _, _ in implementations])
     print(header)
     print("-" * len(header))
     for index, size in enumerate(sizes):
-        timings = " | ".join(
-            f"{results[name][index]:>14.4f}" for name, _, _ in implementations
-        )
+        timings = " | ".join(f"{results[name][index]:>14.4f}" for name, _, _ in implementations)
         print(f"{size:>10,} | {timings}")
 
     print("\nResume de complexite")
