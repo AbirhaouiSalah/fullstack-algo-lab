@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "fullstack-algo-lab",
   "version": "1.0.0",
   "private": true,
@@ -7,15 +7,21 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:learning-lab": "vitest run algorithms/learning-lab.test.ts",
     "lint": "eslint . --ext .ts,.js",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "typescript": "^5.5.0",
-    "ts-node": "^10.9.0",
-    "vitest": "^2.0.0",
+    "@types/node": "^20.0.0",
     "eslint": "^9.0.0",
     "prettier": "^3.3.0",
-    "@types/node": "^20.0.0"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.12",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.9"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "esbuild@0.28.2": true
   }
 }
