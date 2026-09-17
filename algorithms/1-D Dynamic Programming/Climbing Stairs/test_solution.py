@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pytest
 
-
 solution_path = Path(__file__).with_name("solution.py")
 spec = importlib.util.spec_from_file_location("climbing_stairs_solution", solution_path)
 if spec is None or spec.loader is None:

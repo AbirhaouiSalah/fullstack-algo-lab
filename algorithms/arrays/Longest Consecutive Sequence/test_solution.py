@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pytest
 
-
 solution_path = Path(__file__).with_name("solution.py")
 spec = importlib.util.spec_from_file_location("longest_consecutive_solution", solution_path)
 if spec is None or spec.loader is None:
@@ -100,7 +99,7 @@ spec.loader.exec_module(solution_module)
         ([1, 2, 3, 4, 6, 7, 8, 9], 4),
 
         # --- Maximum-ish input, all distinct consecutive ---
-        (list(range(0, 1000)), 1000),
+        (list(range(1000)), 1000),
         (list(range(-500, 500)), 1000),
     ],
 )
