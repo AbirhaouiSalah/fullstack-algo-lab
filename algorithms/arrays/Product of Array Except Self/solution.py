@@ -2,7 +2,6 @@
 
 def solve(list_int : List[int])->List[int]:
     prod_except_self =[]
-    print(len(list_int))
     for elm in range(len(list_int)) :
         prod_except_self.append(1)
     for i in range(len(list_int)):
@@ -27,10 +26,9 @@ def solve2(list_int : List[int])->List[int]:
         prefix[i]=prefix[i-1]*list_int[i-1]
     for j in range(n-2,-1,-1):
         suffix[j]=suffix[j+1]*list_int[j+1]
-    print(prefix)
-    print(suffix)
+ 
     # lets define suffix and prefix as follows 
     for i in range(n):
         prod_execept_self[i] = suffix[i] * prefix[i]
-        print(prod_execept_self)
+
     return prod_execept_self
