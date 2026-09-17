@@ -1,6 +1,4 @@
-﻿from typing import List
-
-def solve(list_int : List[int])->List[int]:
+﻿def solve(list_int : list[int])->list[int]:
     prod_except_self =[]
     for elm in range(len(list_int)) :
         prod_except_self.append(1)
@@ -10,7 +8,7 @@ def solve(list_int : List[int])->List[int]:
             prod_except_self[i]=prod_except_self[i]*list_int[j]
     return prod_except_self
 
-def solve2(list_int : List[int])->List[int]:
+def solve2(list_int : list[int])->list[int]:
     prod_execept_self = []
     suffix = []
     prefix = []

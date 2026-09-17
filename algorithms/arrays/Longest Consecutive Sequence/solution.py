@@ -16,8 +16,7 @@
             current += 1
             length += 1
 
-        if length > best:
-            best = length
+        best = max(best, length)
 
     return best
 

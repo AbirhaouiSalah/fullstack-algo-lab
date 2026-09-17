@@ -1,6 +1,4 @@
-﻿from typing import List
-
-class Solution:
+﻿class Solution:
 
     def encode(self, strs):
         encoded_string = ""
@@ -19,11 +17,11 @@ class Solution:
 
         splited_string = s.split("#")
 
-        for s in splited_string :
+        for part in splited_string :
 
-            if s == "#" or s =="":
+            if part == "#" or part =="":
                 continue
-            encoded_string.append(s)
+            encoded_string.append(part)
                     
         return encoded_string
 
@@ -39,7 +37,7 @@ class Solution2:
 
 
 class Solution3:
-    def encode(self, strs: List[str]) -> str:
+    def encode(self, strs: list[str]) -> str:
         encoded_parts = []
         for s in strs:
             # Combine the three important pieces:
@@ -49,7 +47,7 @@ class Solution3:
             encoded_parts.append(s)
         return "".join(encoded_parts)
 
-    def decode(self, encoded: str) -> List[str]:
+    def decode(self, encoded: str) -> list[str]:
         decoded = []
         i = 0
         n = len(encoded)

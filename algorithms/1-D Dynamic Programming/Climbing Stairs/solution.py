@@ -15,7 +15,7 @@ ways(2) = 2
 This is Fibonacci shifted by one index.
 """
 
-from functools import lru_cache
+from functools import cache
 
 
 # ---------------------------------------------------------------------------
@@ -30,7 +30,7 @@ def solve_recursive(n: int) -> int:
 # ---------------------------------------------------------------------------
 # 2. Memoized recursion (top-down DP) — O(n) time, O(n) space
 # ---------------------------------------------------------------------------
-@lru_cache(maxsize=None)
+@cache
 def _memo(n: int) -> int:
     if n <= 2:
         return n

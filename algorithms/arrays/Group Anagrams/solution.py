@@ -7,17 +7,16 @@ def solve_hint_1(strs: list[str]) -> list[list[str]]:
     groups_occurences = defaultdict(list)
     # strs :: ["str", ... ]
     # lets start by sorting the list
-    sorted_strs = sorted(strs)
 #   print(sorted_strs)
 #    print(strs)
     # signature with ascii 
-    for str in strs :
-        codes = [ord(c) for c in str]
-        if str in groups.keys():
-            groups_occurences[str]+=1
+    for word in strs :
+        codes = [ord(c) for c in word]
+        if word in groups:
+            groups_occurences[word]+=1
         else :
-            groups_occurences[str]=1
-        groups[str]=sum(codes)
+            groups_occurences[word]=1
+        groups[word]=sum(codes)
     # print(groups_occurences)
     # print(groups)
 

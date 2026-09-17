@@ -1,10 +1,11 @@
 import importlib.util
 import inspect
-import pytest
 import random
 import string
 import time
 from pathlib import Path
+
+import pytest
 
 solution_path = Path(__file__).with_name("solution.py")
 spec = importlib.util.spec_from_file_location("generated_solution", solution_path)
@@ -187,7 +188,7 @@ def run_edge_case_report():
             try:
                 ok = instance.decode(instance.encode(strs)) == strs
                 row.append(f"{'OK' if ok else 'CASSE':>10}")
-            except Exception:
+            except (AttributeError, IndexError, TypeError, ValueError, RecursionError):
                 row.append(f"{'erreur':>10}")
         print(" | ".join(row))
 
@@ -217,7 +218,7 @@ def run_encode_decode_benchmark():
 
                 try:
                     round_trip_ok = instance.decode(instance.encode(strs)) == strs
-                except Exception as error:
+                except (AttributeError, IndexError, TypeError, ValueError, RecursionError) as error:
                     print(f"{class_name:>12} | {profile:>16} | {count:>7,} | {length:>6} | {'-':>18} | erreur: {error}")
                     continue
 
