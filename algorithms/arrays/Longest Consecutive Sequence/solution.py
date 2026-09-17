@@ -2,7 +2,7 @@
     if not nums:
         return 0
 
-    values = set(nums)          # O(n) lookups
+    values = set(nums)  # O(n) lookups
     best = 0
 
     for num in values:
@@ -20,22 +20,23 @@
 
     return best
 
+
 def solve2(nums):
     if not nums:
         return 0
 
-    values = set(nums)         # O(n) to build
+    values = set(nums)  # O(n) to build
     best = 0
 
     for num in values:
         # Skip anything that is not the start of a run
         if num - 1 in values:
-            continue           # O(1) hash lookup
+            continue  # O(1) hash lookup
 
         # num is a start: count how long its run is
         current = num
         length = 1
-        while current + 1 in values:   # O(1) per step
+        while current + 1 in values:  # O(1) per step
             current += 1
             length += 1
 

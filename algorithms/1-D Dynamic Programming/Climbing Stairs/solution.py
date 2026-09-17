@@ -112,7 +112,7 @@ def solve_matrix(n: int) -> int:
 def solve_binet(n: int) -> int:
     if n <= 2:
         return n
-    sqrt5 = 5 ** 0.5
+    sqrt5 = 5**0.5
     phi = (1 + sqrt5) / 2
     psi = (1 - sqrt5) / 2
     # ways(n) = F(n+1) = (phi^(n+1) - psi^(n+1)) / sqrt5

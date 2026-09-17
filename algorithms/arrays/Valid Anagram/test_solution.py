@@ -19,6 +19,7 @@ spec.loader.exec_module(solution_module)
 # Tests
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize(
     ("s", "t", "expected"),
     [
@@ -26,77 +27,65 @@ spec.loader.exec_module(solution_module)
         ("racecar", "carrace", True),
         ("jar", "jam", False),
         ("x", "x", True),
-
         # --- Single character ---
         ("a", "b", False),
         ("a", "a", True),
-
         # --- Different lengths ---
         ("ab", "abc", False),
         ("abc", "ab", False),
         ("a", "aa", False),
         ("a" * 10, "a" * 11, False),
-
         # --- Same length, different content ---
         ("ab", "cd", False),
         ("abcd", "abce", False),
         ("abc", "abd", False),
-
         # --- Same characters, different order ---
         ("listen", "silent", True),
         ("evil", "vile", True),
         ("anagram", "nagaram", True),
         ("triangle", "integral", True),
-
         # --- Repeated characters ---
         ("aabbcc", "abcabc", True),
         ("aabbcc", "aabbcd", False),
         ("aaab", "baaa", True),
         ("aaa", "aaaa", False),
-
         # --- All same character ---
         ("aaaa", "aaaa", True),
         ("aaaa", "aaab", False),
         ("zzzzz", "zzzzz", True),
-
         # --- Same total count, different distribution ---
         ("aabb", "abab", True),
         ("aabb", "abbb", False),
         ("aabbcc", "aabccd", False),
-
         # --- Prefix / suffix traps ---
         ("abcdef", "fabcde", True),
         ("abcdef", "abcde", False),
         ("abc", "cba", True),
-
         # --- Palindromes ---
         ("racecar", "racecar", True),
         ("abba", "baab", True),
         ("abcba", "abcba", True),
-
         # --- Boundary: max length 50_000 ---
         ("a" * 50_000, "a" * 50_000, True),
         ("a" * 50_000, "a" * 49_999 + "b", False),
         ("ab" * 25_000, "ba" * 25_000, True),
         ("ab" * 25_000, "ab" * 24_999 + "aa", False),
-
         # ---------------------------------------------------------------
         # Sum-of-ord() collisions.
         # Same character sum, different content. MUST return False.
         # Any solution based on ord sums, XOR of chars, or char products
         # will fail these.
         # ---------------------------------------------------------------
-        ("ad", "bc", False),       # 97+100  == 98+99    == 197
-        ("ae", "bd", False),       # 97+101  == 98+100   == 198
-        ("af", "be", False),       # 97+102  == 98+101   == 199
-        ("af", "cd", False),       # 97+102  == 99+100   == 199
-        ("az", "mn", False),       # 97+122  == 109+110  == 219
-        ("abcd", "aadd", False),   # 394 == 394
-        ("aabb", "aaac", False),   # 390 == 390
-        ("ad" * 500, "bc" * 500, False),     # 500*197 == 500*197
-        ("af" * 1000, "be" * 1000, False),   # 1000*199 == 1000*199
-        ("az" * 500, "mn" * 500, False),     # 500*219 == 500*219
-
+        ("ad", "bc", False),  # 97+100  == 98+99    == 197
+        ("ae", "bd", False),  # 97+101  == 98+100   == 198
+        ("af", "be", False),  # 97+102  == 98+101   == 199
+        ("af", "cd", False),  # 97+102  == 99+100   == 199
+        ("az", "mn", False),  # 97+122  == 109+110  == 219
+        ("abcd", "aadd", False),  # 394 == 394
+        ("aabb", "aaac", False),  # 390 == 390
+        ("ad" * 500, "bc" * 500, False),  # 500*197 == 500*197
+        ("af" * 1000, "be" * 1000, False),  # 1000*199 == 1000*199
+        ("az" * 500, "mn" * 500, False),  # 500*219 == 500*219
         # --- Sanity: XOR-equal AND anagram ---
         ("ab", "ba", True),
         ("aabb", "bbaa", True),
@@ -134,6 +123,7 @@ def test_is_anagram_reflexive():
 # ---------------------------------------------------------------------------
 # Benchmark (required by algorithms/test-all.py)
 # ---------------------------------------------------------------------------
+
 
 def _candidate_functions():
     return [
@@ -189,9 +179,13 @@ def run_benchmark():
                         function(s, t)
                     elapsed_ms = (time.perf_counter() - start) * 1_000 / repetitions
                 except (AttributeError, IndexError, TypeError, ValueError, RecursionError) as error:
-                    print(f"{function.__name__:>24} | {size:>8,} | {case_name:>10} | ignoree: {error}")
+                    print(
+                        f"{function.__name__:>24} | {size:>8,} | {case_name:>10} | ignoree: {error}"
+                    )
                     continue
-                print(f"{function.__name__:>24} | {size:>8,} | {case_name:>10} | {elapsed_ms:>18.4f}")
+                print(
+                    f"{function.__name__:>24} | {size:>8,} | {case_name:>10} | {elapsed_ms:>18.4f}"
+                )
 
     if not candidates:
         print("Aucune fonction solve ou solve_* trouvee.")

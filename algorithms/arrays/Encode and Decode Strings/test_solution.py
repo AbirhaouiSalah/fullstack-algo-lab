@@ -19,20 +19,22 @@ spec.loader.exec_module(solution_module)
 def test_solution_module_loads():
     assert solution_module is not None
 
+
 # test the examples written int the exercice section
+
 
 def test_example():
 
     solution = solution_module.Solution3()
 
-    test_input = ["Hello","World"]
-    expected_output = ["Hello","World"]
-    
+    test_input = ["Hello", "World"]
+    expected_output = ["Hello", "World"]
+
     assert solution.decode(solution.encode(test_input)) == expected_output
 
     test_input = [""]
     expected_output = [""]
-    
+
     assert solution.decode(solution.encode(test_input)) == expected_output
 
 
@@ -56,7 +58,7 @@ EDGE_CASES = [
     # one), this fails whenever real content contains that exact character -
     # no fixed delimiter is safe in an absolute sense, only "safe enough for
     # a given input domain". A length-prefixed encoding has no such blind spot.
-    ("contains_private_use_char", ["a\uE000b", "c"]),
+    ("contains_private_use_char", ["a\ue000b", "c"]),
     ("whitespace_and_newlines", ["line1\nline2", "\t\ttabbed", "   spaced   "]),
     ("digits_that_look_like_length_prefix", ["3#abc", "0#", "10#short"]),
     ("mixed_lengths_and_empties", ["", "a", "", "bb", ""]),
@@ -77,7 +79,7 @@ def test_round_trip_edge_cases(strs):
 ALPHABETS = {
     "ascii": string.ascii_letters + string.digits + " ",
     "delimiter_heavy": "#" * 6 + string.ascii_letters[:4],
-    "unicode": "héllo日本語🙂#Ω\uE000",
+    "unicode": "héllo日本語🙂#Ω\ue000",
 }
 
 
@@ -92,10 +94,7 @@ def test_round_trip_random_fuzz():
     for _ in range(200):
         count = rng.choice([0, 1, 2, 5, 20])
         alphabet = ALPHABETS[rng.choice(list(ALPHABETS))]
-        strs = [
-            _random_string(rng, rng.choice([0, 1, 3, 10, 50]), alphabet)
-            for _ in range(count)
-        ]
+        strs = [_random_string(rng, rng.choice([0, 1, 3, 10, 50]), alphabet) for _ in range(count)]
         assert solution.decode(solution.encode(strs)) == strs, f"round-trip failed for {strs!r}"
 
 
@@ -154,6 +153,7 @@ def run_benchmark():
 # Encode/decode specific benchmark - compares every Solution-like class found
 # in the module (Solution, Solution3, ...) side by side
 # ---------------------------------------------------------------------------
+
 
 def _candidate_solution_classes():
     classes = [
@@ -219,7 +219,9 @@ def run_encode_decode_benchmark():
                 try:
                     round_trip_ok = instance.decode(instance.encode(strs)) == strs
                 except (AttributeError, IndexError, TypeError, ValueError, RecursionError) as error:
-                    print(f"{class_name:>12} | {profile:>16} | {count:>7,} | {length:>6} | {'-':>18} | erreur: {error}")
+                    print(
+                        f"{class_name:>12} | {profile:>16} | {count:>7,} | {length:>6} | {'-':>18} | erreur: {error}"
+                    )
                     continue
 
                 start = time.perf_counter()
@@ -228,7 +230,9 @@ def run_encode_decode_benchmark():
                 elapsed_ms = (time.perf_counter() - start) * 1_000 / repetitions
 
                 status = "OK" if round_trip_ok else "CASSE"
-                print(f"{class_name:>12} | {profile:>16} | {count:>7,} | {length:>6} | {elapsed_ms:>18.4f} | {status:>10}")
+                print(
+                    f"{class_name:>12} | {profile:>16} | {count:>7,} | {length:>6} | {elapsed_ms:>18.4f} | {status:>10}"
+                )
 
 
 if __name__ == "__main__":

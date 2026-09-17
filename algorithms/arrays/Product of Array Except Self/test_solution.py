@@ -16,17 +16,19 @@ spec.loader.exec_module(solution_module)
 def test_solution_module_loads():
     assert solution_module is not None
 
+
 def test_example():
 
-    test_input = [1,2,4,6]
-    expected_output= [48,24,12,8]
+    test_input = [1, 2, 4, 6]
+    expected_output = [48, 24, 12, 8]
 
-    assert solution_module.solve2(test_input)==expected_output
+    assert solution_module.solve2(test_input) == expected_output
 
-    test_input = [-1,0,1,2,3]
-    expected_output= [0,-6,0,0,0]
+    test_input = [-1, 0, 1, 2, 3]
+    expected_output = [0, -6, 0, 0, 0]
 
-    assert solution_module.solve2(test_input)==expected_output
+    assert solution_module.solve2(test_input) == expected_output
+
 
 def _candidate_functions():
     return [

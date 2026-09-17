@@ -33,6 +33,7 @@ solve = solution_module.solve
 # exponential-time implementations.  n = 20 is still a solid upper bound
 # (ways(20) = 10946) and stays fast for every reasonable solution.
 
+
 @pytest.mark.parametrize(
     ("steps", "expected"),
     [
@@ -78,6 +79,7 @@ def test_is_monotonically_increasing():
 # ---------------------------------------------------------------------------
 # Sizes are capped at 20 so recursive / exponential implementations do not
 # stall the pipeline.  Increase locally if you want to profile the blow-up.
+
 
 def _candidate_functions():
     """Collect `solve` and any `solve_*` variants defined in solution.py."""

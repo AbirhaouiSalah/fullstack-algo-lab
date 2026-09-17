@@ -6,34 +6,34 @@
             return strs[0]
 
         for s in strs:
-            encoded_string+=s+"#"
+            encoded_string += s + "#"
 
         return encoded_string
 
     def decode(self, s: str):
         encoded_string = []
         if s == "":
-            return['']
+            return [""]
 
         splited_string = s.split("#")
 
-        for part in splited_string :
+        for part in splited_string:
 
-            if part == "#" or part =="":
+            if part == "#" or part == "":
                 continue
             encoded_string.append(part)
-                    
+
         return encoded_string
 
+
 class Solution2:
-    DELIM = "\uE000"
+    DELIM = "\ue000"
 
     def encode(self, strs) -> str:
         return self.DELIM.join(strs)
 
     def decode(self, s: str):
         return s.split(self.DELIM)
-
 
 
 class Solution3:
@@ -71,6 +71,7 @@ class Solution3:
             i = end
 
         return decoded
+
 
 def solve():
     # TODO: implement solution

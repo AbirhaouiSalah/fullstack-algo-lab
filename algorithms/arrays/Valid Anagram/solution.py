@@ -3,7 +3,7 @@
         return False
 
     counts = [0] * 26
-    base = ord('a')
+    base = ord("a")
     for cs, ct in zip(s, t):
         counts[ord(cs) - base] += 1
         counts[ord(ct) - base] -= 1
