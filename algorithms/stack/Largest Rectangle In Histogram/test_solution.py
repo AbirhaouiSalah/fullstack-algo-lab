@@ -69,7 +69,6 @@ def test_largest_rectangle_area_seeded_random_inputs_match_brute_force():
             assert candidate(heights) == expected, candidate.__name__
 
 
-
 def run_benchmark():
     print("\nBenchmark: Largest Rectangle in Histogram")
     print(f"{'Solution':>24} | {'Barres':>12} | {'Temps (ms)':>12}")

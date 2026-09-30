@@ -43,9 +43,7 @@ def test_solve_alias_matches_main_solution():
 def test_classic_leetcode_examples(evaluate):
     assert evaluate(["2", "1", "+", "3", "*"]) == 9
     assert evaluate(["4", "13", "5", "/", "+"]) == 6
-    assert evaluate(
-        ["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]
-    ) == 22
+    assert evaluate(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]) == 22
 
 
 def test_single_number(evaluate):
