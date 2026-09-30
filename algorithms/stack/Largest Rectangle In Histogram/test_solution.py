@@ -1,9 +1,9 @@
 import importlib.util
 import inspect
 import itertools
-from pathlib import Path
 import random
 import time
+from pathlib import Path
 
 solution_path = Path(__file__).with_name("solution.py")
 spec = importlib.util.spec_from_file_location("stack_histogram_solution", solution_path)

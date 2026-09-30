@@ -1,8 +1,8 @@
 import importlib.util
-import itertools
 import inspect
-from pathlib import Path
+import itertools
 import time
+from pathlib import Path
 
 solution_path = Path(__file__).with_name("solution.py")
 spec = importlib.util.spec_from_file_location("stack_valid_parentheses_solution", solution_path)

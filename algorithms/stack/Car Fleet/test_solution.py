@@ -1,9 +1,9 @@
 import importlib.util
 import inspect
-from pathlib import Path
 import random
 import time
 from fractions import Fraction
+from pathlib import Path
 
 solution_path = Path(__file__).with_name("solution.py")
 spec = importlib.util.spec_from_file_location("stack_car_fleet_solution", solution_path)
