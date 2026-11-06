@@ -72,7 +72,7 @@ def test_exhaustive_all_rotations():
     """Every size from 1 to 40 and every rotation, including the full turn (k = n)."""
     for size in range(1, 41):
         base = list(range(-5, size - 5))
-        for k in range(0, size + 1):
+        for k in range(size + 1):
             nums = _rotate(base, k)
             for function in _candidate_functions():
                 assert function(nums.copy()) == base[0], (

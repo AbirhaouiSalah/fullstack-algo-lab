@@ -76,7 +76,7 @@ def test_exhaustive_all_rotations_and_targets():
     """Every size 1..25, every rotation (incl. the full turn), every target from min - 1 to max + 1."""
     for size in range(1, 26):
         base = list(range(-5, size - 5))
-        for k in range(0, size + 1):
+        for k in range(size + 1):
             nums = _rotate(base, k)
             for target in range(base[0] - 1, base[-1] + 2):
                 expected = nums.index(target) if target in nums else -1

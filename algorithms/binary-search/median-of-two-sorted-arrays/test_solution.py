@@ -81,7 +81,7 @@ def test_returns_float():
 
 def test_exhaustive_small_arrays():
     """Every pair of sorted arrays with up to 4 values from 0..4 (duplicates included)."""
-    arrays = [list(c) for size in range(0, 5) for c in itertools.combinations_with_replacement(range(5), size)]
+    arrays = [list(c) for size in range(5) for c in itertools.combinations_with_replacement(range(5), size)]
     for nums1 in arrays:
         for nums2 in arrays:
             if not nums1 and not nums2:

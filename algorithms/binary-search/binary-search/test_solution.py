@@ -59,7 +59,7 @@ def test_binary_search_cases(nums, target, expected):
 def test_exhaustive_small_arrays():
     """Every sorted subset of range(-3, 7) against every target in range(-4, 8)."""
     universe = range(-3, 7)
-    for size in range(0, len(universe) + 1):
+    for size in range(len(universe) + 1):
         for nums in itertools.combinations(universe, size):
             nums = list(nums)
             for target in range(-4, 8):
