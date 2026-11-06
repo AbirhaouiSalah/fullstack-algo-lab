@@ -1,4 +1,5 @@
 """Tests and benchmark for NeetCode Search a 2D Matrix."""
+
 import importlib.util
 import inspect
 import random
@@ -8,10 +9,10 @@ from pathlib import Path
 
 import pytest
 
-solution_path = Path(__file__).with_name('solution.py')
-spec = importlib.util.spec_from_file_location('generated_solution', solution_path)
+solution_path = Path(__file__).with_name("solution.py")
+spec = importlib.util.spec_from_file_location("generated_solution", solution_path)
 if spec is None or spec.loader is None:
-    raise ImportError(f'Cannot load solution from {solution_path}')
+    raise ImportError(f"Cannot load solution from {solution_path}")
 solution_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(solution_module)
 
@@ -21,7 +22,7 @@ def _candidate_functions():
         function
         for name, function in inspect.getmembers(solution_module, inspect.isfunction)
         if function.__module__ == solution_module.__name__
-        and (name == 'solve' or name.startswith('solve_'))
+        and (name == "solve" or name.startswith("solve_"))
     ]
 
 
@@ -34,7 +35,7 @@ def test_solution_module_loads():
 
 
 def test_candidate_exists():
-    assert _candidate_functions(), 'Define solve(matrix, target) or solve_*(matrix, target)'
+    assert _candidate_functions(), "Define solve(matrix, target) or solve_*(matrix, target)"
 
 
 CASES = [
@@ -56,11 +57,13 @@ CASES = [
 ]
 
 
-@pytest.mark.parametrize('matrix,target,expected', CASES)
+@pytest.mark.parametrize("matrix,target,expected", CASES)
 def test_search_matrix_cases(matrix, target, expected):
     for function in _candidate_functions():
         actual = function(_copy(matrix), target)
-        assert actual is expected, f'{function.__name__}({matrix}, {target}) returned {actual}, expected {expected}'
+        assert (
+            actual is expected
+        ), f"{function.__name__}({matrix}, {target}) returned {actual}, expected {expected}"
 
 
 def _random_matrix(rng, m, n):
@@ -86,9 +89,9 @@ def test_randomized_against_reference():
         for target in range(low, high + 1):
             expected = any(target in row for row in matrix)
             for function in _candidate_functions():
-                assert function(_copy(matrix), target) is expected, (
-                    f'{function.__name__}({matrix}, {target}) expected {expected}'
-                )
+                assert (
+                    function(_copy(matrix), target) is expected
+                ), f"{function.__name__}({matrix}, {target}) expected {expected}"
 
 
 def test_input_not_mutated():
@@ -96,7 +99,7 @@ def test_input_not_mutated():
     snapshot = _copy(matrix)
     for function in _candidate_functions():
         function(matrix, 9)
-        assert matrix == snapshot, f'{function.__name__} mutated its input'
+        assert matrix == snapshot, f"{function.__name__} mutated its input"
 
 
 def _arguments_for(function, matrix, target):
@@ -113,28 +116,30 @@ def run_benchmark():
     repetitions = 1_000
     rng = random.Random(42)
     candidates = _candidate_functions()
-    print('\nBenchmark Search a 2D Matrix (lignes triees, debut > fin de la ligne precedente)')
+    print("\nBenchmark Search a 2D Matrix (lignes triees, debut > fin de la ligne precedente)")
     print(f"{'Fonction':>24} | {'m x n':>11} | {'Scenario':>9} | {'Moyenne (us)':>13}")
-    print('-' * 70)
+    print("-" * 70)
     for function in candidates:
         for side in sides:
             # O(m * n) fixture construction is deliberately outside the timed section.
             matrix = [[2 * (i * side + j) for j in range(side)] for i in range(side)]
             total = side * side
             scenarios = [
-                ('present', 2 * rng.randrange(total)),
-                ('absent', 2 * (total // 2) + 1),  # dans l'intervalle mais absent
+                ("present", 2 * rng.randrange(total)),
+                ("absent", 2 * (total // 2) + 1),  # dans l'intervalle mais absent
             ]
             for scenario, target in scenarios:
                 arguments = _arguments_for(function, matrix, target)
                 if arguments is None:
-                    print(f'{function.__name__:>24} | signature non supportee')
+                    print(f"{function.__name__:>24} | signature non supportee")
                     break
-                expected = scenario == 'present'
+                expected = scenario == "present"
                 actual = function(*arguments)
-                label = f'{side}x{side}'
+                label = f"{side}x{side}"
                 if actual is not expected:
-                    print(f'{function.__name__:>24} | {label:>11} | {scenario:>9} | ECHEC: {actual} != {expected}')
+                    print(
+                        f"{function.__name__:>24} | {label:>11} | {scenario:>9} | ECHEC: {actual} != {expected}"
+                    )
                     continue
                 samples = []
                 for _ in range(5):
@@ -142,10 +147,12 @@ def run_benchmark():
                     for _ in range(repetitions):
                         function(*arguments)
                     samples.append((time.perf_counter_ns() - start) / repetitions / 1_000)
-                print(f'{function.__name__:>24} | {label:>11} | {scenario:>9} | {statistics.median(samples):>13.3f}')
+                print(
+                    f"{function.__name__:>24} | {label:>11} | {scenario:>9} | {statistics.median(samples):>13.3f}"
+                )
     if not candidates:
-        print('Aucune fonction solve ou solve_* trouvee.')
+        print("Aucune fonction solve ou solve_* trouvee.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_benchmark()

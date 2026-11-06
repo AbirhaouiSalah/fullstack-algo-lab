@@ -2,6 +2,7 @@
 
 Define the signature from the official statement before writing the algorithm.
 """
+
 """Search in Rotated Sorted Array in O(log n), without list.index, bisect or linear scanning."""
 
 
@@ -92,7 +93,7 @@ class search_rotated:
             mid = l + (r - l) // 2
             value = nums[mid]
             if (value >= first) != target_is_left:
-                value = float('inf') if target_is_left else float('-inf')
+                value = float("inf") if target_is_left else float("-inf")
             if value == target:
                 return mid
             elif value < target:

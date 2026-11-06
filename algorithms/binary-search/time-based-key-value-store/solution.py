@@ -2,6 +2,7 @@
 
 Define the signature from the official statement before writing the algorithm.
 """
+
 """Time Based Key-Value Store: set in O(1), get in O(log n) with a handwritten binary search.
 
 The bisect-based class is only a stdlib baseline for the benchmark and the linear class is the
@@ -20,7 +21,9 @@ class TimeMap:
         if key not in self.store:
             self.store[key] = ([], [])
         timestamps, values = self.store[key]
-        timestamps.append(timestamp)  # timestamps strictement croissants : append garde la liste triee
+        timestamps.append(
+            timestamp
+        )  # timestamps strictement croissants : append garde la liste triee
         values.append(value)
 
     def get(self, key: str, timestamp: int) -> str:
@@ -147,16 +150,16 @@ def _replay(factory, operations: list[str], arguments: list[list]) -> list:
     obj = None
     outputs: list = []
     for operation, args in zip(operations, arguments):
-        if operation == 'TimeMap':
+        if operation == "TimeMap":
             obj = factory()
             outputs.append(None)
-        elif operation == 'set':
+        elif operation == "set":
             obj.set(*args)
             outputs.append(None)
-        elif operation == 'get':
+        elif operation == "get":
             outputs.append(obj.get(*args))
         else:
-            raise ValueError(f'Unknown operation: {operation}')
+            raise ValueError(f"Unknown operation: {operation}")
     return outputs
 
 

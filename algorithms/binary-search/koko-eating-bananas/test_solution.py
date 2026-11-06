@@ -2,6 +2,7 @@
 
 Use pytest; avoid treating an empty suite as a passed exercise.
 """
+
 """Tests and benchmark for NeetCode Koko Eating Bananas."""
 import importlib.util
 import inspect
@@ -12,10 +13,10 @@ from pathlib import Path
 
 import pytest
 
-solution_path = Path(__file__).with_name('solution.py')
-spec = importlib.util.spec_from_file_location('generated_solution', solution_path)
+solution_path = Path(__file__).with_name("solution.py")
+spec = importlib.util.spec_from_file_location("generated_solution", solution_path)
 if spec is None or spec.loader is None:
-    raise ImportError(f'Cannot load solution from {solution_path}')
+    raise ImportError(f"Cannot load solution from {solution_path}")
 solution_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(solution_module)
 
@@ -25,7 +26,7 @@ def _candidate_functions():
         function
         for name, function in inspect.getmembers(solution_module, inspect.isfunction)
         if function.__module__ == solution_module.__name__
-        and (name == 'solve' or name.startswith('solve_'))
+        and (name == "solve" or name.startswith("solve_"))
     ]
 
 
@@ -38,7 +39,7 @@ def _linear_reference(piles, h):
     for k in range(1, max(piles) + 1):
         if _hours(piles, k) <= h:
             return k
-    raise AssertionError('unreachable: k = max(piles) always works when h >= len(piles)')
+    raise AssertionError("unreachable: k = max(piles) always works when h >= len(piles)")
 
 
 def _binary_reference(piles, h):
@@ -58,7 +59,7 @@ def test_solution_module_loads():
 
 
 def test_candidate_exists():
-    assert _candidate_functions(), 'Define solve(piles, h) or solve_*(piles, h)'
+    assert _candidate_functions(), "Define solve(piles, h) or solve_*(piles, h)"
 
 
 CASES = [
@@ -79,11 +80,13 @@ CASES = [
 ]
 
 
-@pytest.mark.parametrize('piles,h,expected', CASES)
+@pytest.mark.parametrize("piles,h,expected", CASES)
 def test_koko_cases(piles, h, expected):
     for function in _candidate_functions():
         actual = function(piles.copy(), h)
-        assert actual == expected, f'{function.__name__}({piles}, {h}) returned {actual}, expected {expected}'
+        assert (
+            actual == expected
+        ), f"{function.__name__}({piles}, {h}) returned {actual}, expected {expected}"
 
 
 def test_exhaustive_small():
@@ -95,9 +98,9 @@ def test_exhaustive_small():
                     for h in range(len(piles), sum(piles) + 2):
                         expected = _linear_reference(piles, h)
                         for function in _candidate_functions():
-                            assert function(piles.copy(), h) == expected, (
-                                f'{function.__name__}({piles}, {h}) expected {expected}'
-                            )
+                            assert (
+                                function(piles.copy(), h) == expected
+                            ), f"{function.__name__}({piles}, {h}) expected {expected}"
 
 
 def test_randomized_against_reference():
@@ -108,7 +111,9 @@ def test_randomized_against_reference():
         h = rng.randrange(n, sum(piles) + 3)
         expected = _linear_reference(piles, h)
         for function in _candidate_functions():
-            assert function(piles.copy(), h) == expected, f'{function.__name__}({piles}, {h}) expected {expected}'
+            assert (
+                function(piles.copy(), h) == expected
+            ), f"{function.__name__}({piles}, {h}) expected {expected}"
 
 
 def test_randomized_large_values():
@@ -119,7 +124,9 @@ def test_randomized_large_values():
         h = rng.randrange(n, min(1_000_000_000, 5 * n) + 1)
         expected = _binary_reference(piles, h)
         for function in _candidate_functions():
-            assert function(piles.copy(), h) == expected, f'{function.__name__} failed on large values'
+            assert (
+                function(piles.copy(), h) == expected
+            ), f"{function.__name__} failed on large values"
 
 
 def test_result_is_minimal_and_feasible():
@@ -139,7 +146,7 @@ def test_input_not_mutated():
     snapshot = piles.copy()
     for function in _candidate_functions():
         function(piles, 6)
-        assert piles == snapshot, f'{function.__name__} mutated its input'
+        assert piles == snapshot, f"{function.__name__} mutated its input"
 
 
 def _arguments_for(function, piles, h):
@@ -155,24 +162,26 @@ def run_benchmark():
     sizes = [10, 100, 1_000, 10_000]
     rng = random.Random(42)
     candidates = _candidate_functions()
-    print('\nBenchmark Koko Eating Bananas (piles aleatoires dans [1, 10^9])')
+    print("\nBenchmark Koko Eating Bananas (piles aleatoires dans [1, 10^9])")
     print(f"{'Fonction':>24} | {'n piles':>8} | {'Scenario':>9} | {'Moyenne (us)':>13}")
-    print('-' * 68)
+    print("-" * 68)
     for function in candidates:
         for size in sizes:
             # Fixture construction and reference answer are deliberately outside the timed section.
             piles = [rng.randrange(1, 1_000_000_001) for _ in range(size)]
             repetitions = max(5, 100_000 // size)
-            scenarios = [('h=n', size), ('h=2n', 2 * size), ('h=10n', 10 * size)]
+            scenarios = [("h=n", size), ("h=2n", 2 * size), ("h=10n", 10 * size)]
             for scenario, h in scenarios:
                 arguments = _arguments_for(function, piles, h)
                 if arguments is None:
-                    print(f'{function.__name__:>24} | signature non supportee')
+                    print(f"{function.__name__:>24} | signature non supportee")
                     break
                 expected = _binary_reference(piles, h)
                 actual = function(*arguments)
                 if actual != expected:
-                    print(f'{function.__name__:>24} | {size:>8,} | {scenario:>9} | ECHEC: {actual} != {expected}')
+                    print(
+                        f"{function.__name__:>24} | {size:>8,} | {scenario:>9} | ECHEC: {actual} != {expected}"
+                    )
                     continue
                 samples = []
                 for _ in range(5):
@@ -180,10 +189,12 @@ def run_benchmark():
                     for _ in range(repetitions):
                         function(*arguments)
                     samples.append((time.perf_counter_ns() - start) / repetitions / 1_000)
-                print(f'{function.__name__:>24} | {size:>8,} | {scenario:>9} | {statistics.median(samples):>13.3f}')
+                print(
+                    f"{function.__name__:>24} | {size:>8,} | {scenario:>9} | {statistics.median(samples):>13.3f}"
+                )
     if not candidates:
-        print('Aucune fonction solve ou solve_* trouvee.')
+        print("Aucune fonction solve ou solve_* trouvee.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_benchmark()

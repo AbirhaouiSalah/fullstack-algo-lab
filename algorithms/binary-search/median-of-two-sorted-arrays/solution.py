@@ -2,6 +2,7 @@
 
 Define the signature from the official statement before writing the algorithm.
 """
+
 """Median of Two Sorted Arrays in O(log(min(m, n))), without merging and sorting the full input."""
 
 
@@ -16,17 +17,19 @@ class median_finder:
             a, b = b, a  # a est toujours le plus petit : la recherche porte sur min(m, n)
 
         total = len(a) + len(b)
-        left_size = (total + 1) // 2  # taille de la moitie gauche (le milieu est a gauche si total impair)
+        left_size = (
+            total + 1
+        ) // 2  # taille de la moitie gauche (le milieu est a gauche si total impair)
         lo, hi = 0, len(a)
 
         while lo <= hi:
             i = lo + (hi - lo) // 2  # elements de a dans la moitie gauche
             j = left_size - i  # elements de b dans la moitie gauche
 
-            a_left = a[i - 1] if i > 0 else float('-inf')
-            a_right = a[i] if i < len(a) else float('inf')
-            b_left = b[j - 1] if j > 0 else float('-inf')
-            b_right = b[j] if j < len(b) else float('inf')
+            a_left = a[i - 1] if i > 0 else float("-inf")
+            a_right = a[i] if i < len(a) else float("inf")
+            b_left = b[j - 1] if j > 0 else float("-inf")
+            b_right = b[j] if j < len(b) else float("inf")
 
             if a_left <= b_right and b_left <= a_right:  # partition valide
                 if total % 2:
@@ -37,7 +40,7 @@ class median_finder:
             else:
                 lo = i + 1  # pas assez
 
-        raise ValueError('Inputs must be sorted')
+        raise ValueError("Inputs must be sorted")
 
     # 2. k-ieme plus petit element : a chaque tour on elimine k/2 elements qui ne peuvent pas etre le k-ieme
     @staticmethod
@@ -65,7 +68,10 @@ class median_finder:
         total = len(nums1) + len(nums2)
         if total % 2:
             return float(self.kth_smallest(nums1, nums2, total // 2 + 1))
-        return (self.kth_smallest(nums1, nums2, total // 2) + self.kth_smallest(nums1, nums2, total // 2 + 1)) / 2
+        return (
+            self.kth_smallest(nums1, nums2, total // 2)
+            + self.kth_smallest(nums1, nums2, total // 2 + 1)
+        ) / 2
 
     # 3. Binary search sur la VALEUR : plus petit x tel qu'au moins k elements sont <= x
     @staticmethod
@@ -95,7 +101,10 @@ class median_finder:
         total = len(nums1) + len(nums2)
         if total % 2:
             return float(self.kth_by_value(nums1, nums2, total // 2 + 1))
-        return (self.kth_by_value(nums1, nums2, total // 2) + self.kth_by_value(nums1, nums2, total // 2 + 1)) / 2
+        return (
+            self.kth_by_value(nums1, nums2, total // 2)
+            + self.kth_by_value(nums1, nums2, total // 2 + 1)
+        ) / 2
 
     # 4. Deux pointeurs : fusion partielle, on s'arrete a la moitie. O(m + n), O(1) espace
     def search_two_pointers(self, nums1: list[int], nums2: list[int]) -> float:

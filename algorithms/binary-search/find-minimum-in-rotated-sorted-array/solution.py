@@ -2,6 +2,7 @@
 
 Define the signature from the official statement before writing the algorithm.
 """
+
 """Find Minimum in Rotated Sorted Array in O(log n), without min(nums) or a linear scan."""
 
 
