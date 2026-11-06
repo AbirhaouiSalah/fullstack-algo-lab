@@ -1,0 +1,9 @@
+flowchart TD
+    A[Utilisateur exécute le script] --> B[create-exercise.ps1]
+    B --> C[Résolution des chemins]
+    C --> D[createExerciseScaffold]
+    D --> E[Lecture du dossier source]
+    E --> F[Copie des fichiers]
+    F --> G[Création de exercise.md]
+    G --> H[Retour du résultat]
+    H --> I[Affichage du résumé]

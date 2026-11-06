@@ -1,0 +1,54 @@
+name: Test Python Algorithms
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "algorithms/**/*.py"
+      - "algorithms/requirements-dev.txt"
+      - "pyproject.toml"
+      - ".github/workflows/test-python.yml"
+  push:
+    branches: [main]
+    paths:
+      - "algorithms/**/*.py"
+      - "algorithms/requirements-dev.txt"
+      - "pyproject.toml"
+      - ".github/workflows/test-python.yml"
+
+jobs:
+  pytest:
+    name: Pytest algorithms
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: algorithms/requirements-dev.txt
+
+      - name: Install Python tooling
+        run: python -m pip install -r algorithms/requirements-dev.txt
+
+      - name: Run pytest
+        shell: bash
+        run: |
+          set -o pipefail
+          set +e
+          python algorithms/test-all.py --summary 2>&1 | tee python-results.txt
+          test_status=${PIPESTATUS[0]}
+          python algorithms/test-all.py \
+            --test-file "algorithms/arrays/Top K Frequent Elements/test_solution.py" \
+            --benchmark 2>&1 | tee -a python-results.txt
+          benchmark_status=${PIPESTATUS[0]}
+          python algorithms/test-all.py \
+            --test-file "algorithms/arrays/two-sum/test_solution.py" \
+            --benchmark 2>&1 | tee -a python-results.txt
+          second_benchmark_status=${PIPESTATUS[0]}
+          set -e
+          cat python-results.txt >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$test_status" -ne 0 || "$benchmark_status" -ne 0 || "$second_benchmark_status" -ne 0 ]]; then
+            exit 1
+          fi

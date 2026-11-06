@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant User
+    participant Shell as PowerShell / CLI
+    participant Script as create-exercise.ps1
+    participant Module as exercise-scaffold.ts
+    participant FS as File System
+
+    User->>Shell: Exécute le script avec un chemin source
+    Shell->>Script: Démarre la création de l'exercice
+    Script->>FS: Résout le dossier algorithms et le chemin source
+    Script->>FS: Crée le dossier exercice/<source>
+    Script->>FS: Copie les fichiers du problème source
+    Script->>FS: Écrit le fichier exercise.md
+    Script-->>User: Affiche le chemin créé et les fichiers copiés

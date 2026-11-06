@@ -1,0 +1,6 @@
+{
+  "code-runner.executorMap": {
+    "python": "$workspaceRoot/.venv/bin/python3 -u"
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:system"
+}
